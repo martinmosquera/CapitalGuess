@@ -1,2 +1,2 @@
 # CapitalGuess
- Aplicativo Android - Adivida a Capital do Estado
+ Aplicativo Android - Adivina a Capital do Estado
