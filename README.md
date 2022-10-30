@@ -4,13 +4,13 @@
 ## Aplicativo Android - Adivina a Capital do Estado
 
 - Professor:
-- Alessandro Brawerman
+  Alessandro Brawerman
 
 - Alunos
 
-- Erica
-- Luis 
-- Martin Mosquera
+  Erica
+  Luis 
+  Martin
 
 --
 - Requisitos:
