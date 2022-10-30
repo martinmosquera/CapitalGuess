@@ -5,99 +5,176 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Random;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    private final String[] estados = {"Acre","Alagoas","Amapa","Amazonas","Bahia","Ceará","Distrito Federal","Espíritu Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí","Rio de Janeiro","Rio Grande do Norte","Rio Grande do Sul","Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins"};
-    private final String[] capitais = {"rio branco","maceio","macapa","manaus","salvador","fortaleza","brasilia","vitoria","goiania","sao luis","cuiaba","campo grande","belo horizonte","belem","joao pessoa","curitiba","recife","teresina","rio de janeiro","natal","porto alegre","boa vista","florianopolis","sao paulo","aracaju","palmas"};
 
+    // defino dos arrays de strings onde posiciono o estado no mesmo index do array que a capital
+    private final String[] estados = {"Acre","Alagoas","Amapa","Amazonas","Bahia","Ceará","Distrito Federal","Espíritu Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba"};
+    private final String[] capitais = {"rio branco","maceio","macapa","manaus","salvador","fortaleza","brasilia","vitoria","goiania","sao luis","cuiaba","campo grande","belo horizonte","belem","joao pessoa"};
+
+    // defino um contador para ser reiniciado cada 5 perguntas
     private int count = 0;
+    // um contador para saber as respostas corretas
     private int success = 0;
-    private int state = 0;
-    private boolean ansState = true;
+    // um numero que é o indice no array
+    private int estado = 0;
+    // um array de inteiros para saber quis estado perguntei
+    private int[] perguntados = {-1,-1,-1,-1,-1};
+    // boleano para verificar se tenho um novo estado escolhido
+    private boolean newEstado = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // pego os elementos da janela
         EditText resposta = findViewById(R.id.resposta);
-        resposta.setVisibility(View.GONE);
         TextView result = findViewById(R.id.result);
-        result.setVisibility(View.GONE);
         TextView score = findViewById(R.id.scorePlayer);
-        score.setVisibility(View.GONE);
         TextView ask = findViewById(R.id.textAsk);
-        ask.setVisibility(View.GONE);
         Button confirm = findViewById(R.id.confirm);
-        confirm.setVisibility(View.GONE);
         TextView textEstado = findViewById(R.id.textEstado);
+        Button nxt = findViewById(R.id.next);
+
+        // oculto os elementos para apresentar unicamente a imagem e o botao de start
+        resposta.setVisibility(View.GONE);
+        result.setVisibility(View.GONE);
+        score.setVisibility(View.GONE);
+        ask.setVisibility(View.GONE);
+        confirm.setVisibility(View.GONE);
         textEstado.setVisibility(View.GONE);
-        Button nxt = (Button)findViewById(R.id.next);
+
+        // mudo o botao para que apresente a mensagem start
         nxt.setText("Start");
     }
 
-    public void Guess(View vew){
-        if(ansState){
-            Button nxt = (Button)findViewById(R.id.next);
-            nxt.setVisibility(View.VISIBLE);
-            EditText resposta = findViewById(R.id.resposta);
-            TextView result = findViewById(R.id.result);
-            if(resposta.getText().toString().equalsIgnoreCase(capitais[state])){
-                result.setText("Muito Bemm voce Acertou");
-                success++;
-            }else{
-                result.setText("Nãoo :(... A resposta era "+capitais[state]);
-            }
-            ansState = false;
-        }else{
-            TextView result = findViewById(R.id.result);
-            result.setText("Não tenta fazer trampinhas!");
-        }
-
-    }
+    // funcao encarregada do genrenciamento de visibilidade dos elementos, também sorteia um numero em
+    // relação ao numero de estados do array. quando chega na ultima pergunta se reinicia o jogo (contador)
 
     public void next(View view){
+
+
+
+        // pego os elementos da janela
         Button nxt = (Button)findViewById(R.id.next);
         TextView textEstado = findViewById(R.id.textEstado);
         TextView result = findViewById(R.id.result);
         TextView score = findViewById(R.id.scorePlayer);
-        score.setText(String.valueOf(success*10));
+        Button confirm = findViewById(R.id.confirm);
+        TextView ask = findViewById(R.id.textAsk);
+        ImageView foto = findViewById(R.id.logo);
+
+        //cada vez que clicar no botao será atualiado os pontos
+        score.setText("Score: "+String.valueOf(success*10));
+
+        // coulto a imagem do inicio
+        foto.setVisibility(View.GONE);
+
+        // aleatoreamento sorteio um numero de 0 ate 15 -> # de estados
+        estado = new Random().nextInt(16);
+        // para a primeira rodada
         if(count ==0){
-            Button confirm = findViewById(R.id.confirm);
-            confirm.setVisibility(View.VISIBLE);
-            EditText resposta = findViewById(R.id.resposta);
-            resposta.setVisibility(View.VISIBLE);
+            // guardo o estado perguntado
+            perguntados[0] = estado;
+            // na primeira interacao deixo visiveis os elementos que estão ocultos
             result.setVisibility(View.VISIBLE);
             score.setVisibility(View.VISIBLE);
-            TextView ask = findViewById(R.id.textAsk);
             ask.setVisibility(View.VISIBLE);
             textEstado.setVisibility(View.VISIBLE);
-        }
-        if(count <6){
-            state = new Random().nextInt(26)+1;
-            textEstado.setText(estados[state]);
-            count++;
-            ansState = true;
+            // Mudo o texto do botao de start ou gameend para Next
             nxt.setText("Next");
-            nxt.setVisibility(View.GONE);
+        }
+        if(count <5){
+        // verifico que o estado nao tenha sido perguntado
+            for(int i = 0;i < count;i++){
+                // se o estado fosse igual a um anterior
+                if(estado == perguntados[i]){
+                    // entra em loop ate que tenha um numero diferente
+                    while(!newEstado){
+                        estado = new Random().nextInt(16);
+                        if(estado != perguntados[i]){
+                            newEstado = true;
+                        }
+                    }
+                    // mudo o boolean para a siguente interacao
+                    newEstado = false;
+                }
+                // assim com cada possicao
+            }
+            // guardo o estado na possicao da pergunta atual
+            perguntados[count] = estado;
+            // Apresento o estado sorteado ao usuario
+            textEstado.setText(estados[estado]);
+            // apresento o espaço para a resposta
             EditText resposta = findViewById(R.id.resposta);
+            resposta.setVisibility(View.VISIBLE);
+            // limpo o campo
             resposta.setText("");
+            // deixo visivel o botao para confirmar a resposta e oculto o de next
+            confirm.setVisibility(View.VISIBLE);
+            nxt.setVisibility(View.GONE);
+            // altero a mensagem onde será apresentado se acertou ou nao
             result.setText("Qual será? (Não utilice acentos)");
+            // aumento em 1 o contador
+            count++;
         }else{
-            nxt.setText("Game End!");
+            // se o contador é maior o igual que 5
+            // oculto os elementos para indicar o fin do jogo
             EditText resposta = findViewById(R.id.resposta);
             resposta.setVisibility(View.GONE);
-            result.setText("Obragad@ por jogar!");
-            TextView ask = findViewById(R.id.textAsk);
+            result.setVisibility(View.GONE);
             ask.setVisibility(View.GONE);
-            Button confirm = findViewById(R.id.confirm);
             confirm.setVisibility(View.GONE);
-            textEstado.setVisibility(View.GONE);
+            // mudo o texto do botao de next para Game End e apresento ele
+            nxt.setVisibility(View.VISIBLE);
+            nxt.setText("Game End!");
+            // altero o texto onde se apresenta o estado para a mensagem final
+            textEstado.setText("Obragad@ por jogar!");
+            // reinicio o contador e o numero de acertos
             count =0;
             success = 0;
+            // reinicio o vetor com os perguntados
+            for(int i = 0;i<5;i++){
+                perguntados[i]= -1;
+            }
         }
 
     }
+
+// funcao encarregada de determinar se o usuario acertou o nao e apresentar a mensagem que corresponde
+
+    public void Guess(View vew){
+            // apresnto o botao para continuar
+            Button nxt = (Button)findViewById(R.id.next);
+            nxt.setVisibility(View.VISIBLE);
+            // oculto o batao de confirmar resposta
+            Button confirm = (Button)findViewById(R.id.confirm);
+            confirm.setVisibility(View.GONE);
+
+            // pego os elemento para determinar a validez da resposta
+            EditText resposta = findViewById(R.id.resposta);
+            TextView result = findViewById(R.id.result);
+            TextView score = findViewById(R.id.scorePlayer);
+
+            // se o digitado pelo usuario coincide com o que esta no array de capitais...
+            if(resposta.getText().toString().equalsIgnoreCase(capitais[estado])){
+                // apresento a mensagem que acertou
+                result.setText("Muito Bemm voce Acertou");
+                //auemnto em 1 ao numero de acertos
+                success++;
+                // atualizo o texto que apresenta os pontos do jogador
+                score.setText("Score: "+String.valueOf(success*10));
+            }else{
+                // se nao acertou, apresenta a mensagem de erro e o nome da capital correta
+                result.setText("Nãoo :(... A resposta era "+capitais[estado]);
+            }
+    }
+
+
 }
