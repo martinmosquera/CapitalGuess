@@ -1,16 +1,14 @@
 # CapitalGuess
 
-## Exercicio Pratico da Disciplina Desenvolvimento de Aplicativos Mobiles
-## Aplicativo Android - Adivina a Capital do Estado
+## Desenvolvimento para Dispositivos Móveis - Ufpr
+## Exercício - Adivina a Capital do Estado
 
 - Professor:
   Alessandro Brawerman
 
 - Alunos
 
-  Erica
-  Luis 
-  Martin
+  Erica Riera, Luis Miguel Ferreira, Martin Mosquera
 
 --
 - Requisitos:
