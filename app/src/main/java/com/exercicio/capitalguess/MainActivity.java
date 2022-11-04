@@ -13,10 +13,6 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    // defino dos arrays de strings onde posiciono o estado no mesmo index do array que a capital
-    private final String[] estados = {"Acre","Alagoas","Amapa","Amazonas","Bahia","Ceará","Distrito Federal","Espíritu Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba"};
-    private final String[] capitais = {"rio branco","maceio","macapa","manaus","salvador","fortaleza","brasilia","vitoria","goiania","sao luis","cuiaba","campo grande","belo horizonte","belem","joao pessoa"};
-
     // defino um contador para ser reiniciado cada 5 perguntas
     private int count = 0;
     // um contador para saber as respostas corretas
@@ -58,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     // relação ao numero de estados do array. quando chega na ultima pergunta se reinicia o jogo (contador)
 
     public void next(View view){
-
-
+        // defino dos arrays de strings onde posiciono os estados (no mesmo index das capitais)
+        String[] estados = {"Acre","Alagoas","Amapa","Amazonas","Bahia","Ceará","Distrito Federal","Espíritu Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba"};
 
         // pego os elementos da janela
         Button nxt = (Button)findViewById(R.id.next);
@@ -77,11 +73,10 @@ public class MainActivity extends AppCompatActivity {
         foto.setVisibility(View.GONE);
 
         // aleatoreamento sorteio um numero de 0 ate 15 -> # de estados
-        estado = new Random().nextInt(16);
+        Random r = new Random();
+        estado = r.nextInt(16);
         // para a primeira rodada
         if(count ==0){
-            // guardo o estado perguntado
-            perguntados[0] = estado;
             // na primeira interacao deixo visiveis os elementos que estão ocultos
             result.setVisibility(View.VISIBLE);
             score.setVisibility(View.VISIBLE);
@@ -97,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 if(estado == perguntados[i]){
                     // entra em loop ate que tenha um numero diferente
                     while(!newEstado){
-                        estado = new Random().nextInt(16);
+                        estado = r.nextInt(16);
                         if(estado != perguntados[i]){
                             newEstado = true;
                         }
@@ -124,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
             // aumento em 1 o contador
             count++;
         }else{
+            // mensagem personalizada para quem acertar todas
+            if(success == 5){
+                score.setText("Parabens!! "+String.valueOf(success*10));
+            }
             // se o contador é maior o igual que 5
             // oculto os elementos para indicar o fin do jogo
             EditText resposta = findViewById(R.id.resposta);
@@ -140,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
             count =0;
             success = 0;
             // reinicio o vetor com os perguntados
-            for(int i = 0;i<5;i++){
-                perguntados[i]= -1;
+            for(int j = 0;j<5;j++){
+                perguntados[j]= -1;
             }
         }
 
@@ -150,6 +149,9 @@ public class MainActivity extends AppCompatActivity {
 // funcao encarregada de determinar se o usuario acertou o nao e apresentar a mensagem que corresponde
 
     public void Guess(View vew){
+
+        // defino dos arrays de strings onde posiciono as capitais
+        String[] capitais = {"rio branco","maceio","macapa","manaus","salvador","fortaleza","brasilia","vitoria","goiania","sao luis","cuiaba","campo grande","belo horizonte","belem","joao pessoa"};
             // apresnto o botao para continuar
             Button nxt = (Button)findViewById(R.id.next);
             nxt.setVisibility(View.VISIBLE);
